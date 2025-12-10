@@ -495,7 +495,7 @@ export function DataTable({
             status: task.status?.Status || "Unknown",
             target: task.StartDay || "Not set",
             limit: task.EndDay || "Not set",
-            reviewer: task.assignee || "Unassigned",
+            reviewer: task.assignee?.DisplayName || "Unassigned",
             description: task.TaskDescription || "No description",
          }));
          setData(mappedData);

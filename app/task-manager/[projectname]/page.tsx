@@ -95,7 +95,7 @@ export default function Project() {
                     status: task.status?.Status || "Unknown",
                     target: task.project?.ProjectName || "Unknown",
                     limit: task.CreateAt ? new Date(task.CreateAt).toLocaleDateString() : "N/A",
-                    reviewer: String(task.assignee || "Unassigned") // Ensure reviewer is string
+                    reviewer: task.assignee?.DisplayName || "Unassigned"
                   }))} 
                 />
               )}

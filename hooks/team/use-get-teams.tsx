@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "@/services/api";
-import { showToast } from "@/lib/toast-config";
 
 // Định nghĩa kiểu dữ liệu cho team
 interface Leader {
@@ -24,24 +22,62 @@ interface Team {
   leader: Leader;
 }
 
-interface TeamResponse {
-  message: string;
-  data: Team[];
-}
+// Data cứng cho teams
+const MOCK_TEAMS: Team[] = [
+  {
+    IDTeam: "team-1",
+    TeamName: "Frontend Team",
+    TeamSize: 5,
+    TeamDescription: "Team phát triển giao diện người dùng với React, Next.js và TypeScript",
+    IsDeleted: 0,
+    leader: {
+      IDUser: "user-1",
+      Username: "john_doe",
+      Email: "john.doe@example.com",
+      DisplayName: "John Doe",
+      Avatar: null,
+      Cover: null,
+      IsDeleted: 0
+    }
+  },
+  {
+    IDTeam: "team-2",
+    TeamName: "Backend Team",
+    TeamSize: 4,
+    TeamDescription: "Team phát triển API và hệ thống backend với Node.js và Go",
+    IsDeleted: 0,
+    leader: {
+      IDUser: "user-2",
+      Username: "jane_smith",
+      Email: "jane.smith@example.com",
+      DisplayName: "Jane Smith",
+      Avatar: null,
+      Cover: null,
+      IsDeleted: 0
+    }
+  },
+  {
+    IDTeam: "team-3",
+    TeamName: "Mobile Team",
+    TeamSize: 3,
+    TeamDescription: "Team phát triển ứng dụng mobile với React Native và Flutter",
+    IsDeleted: 0,
+    leader: {
+      IDUser: "user-3",
+      Username: "bob_wilson",
+      Email: "bob.wilson@example.com",
+      DisplayName: "Bob Wilson",
+      Avatar: null,
+      Cover: null,
+      IsDeleted: 0
+    }
+  }
+];
 
 export const fetchTeams = async () => {
-  try {
-    const response = await axios.get<TeamResponse>(`${process.env.NEXT_PUBLIC_API_SERVER}/team`);
-    
-    if (response.status === 200) {
-      return response.data.data;
-    }
-    return [];
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || "Không thể lấy danh sách team. Vui lòng thử lại sau.";
-    showToast.error("Lỗi", errorMessage);
-    return [];
-  }
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return MOCK_TEAMS;
 };
 
 export function useGetTeams() {

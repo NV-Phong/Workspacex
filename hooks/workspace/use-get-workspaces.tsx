@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import axios from "@/services/api";
-import { showToast } from "@/lib/toast-config";
 
 // Định nghĩa kiểu dữ liệu cho workspace
 interface Workspace {
@@ -11,10 +9,24 @@ interface Workspace {
   WorkSpaceDescription: string;
 }
 
-interface WorkspaceResponse {
-  message: string;
-  data: Workspace[];
-}
+// Data cứng cho workspaces
+const MOCK_WORKSPACES: Workspace[] = [
+  {
+    IDWorkspace: "ws-1",
+    WorkSpaceName: "Development Workspace",
+    WorkSpaceDescription: "Không gian làm việc chính cho team phát triển. Bao gồm các dự án frontend, backend và mobile app. Tập trung vào việc xây dựng các tính năng mới và cải thiện hiệu suất hệ thống."
+  },
+  {
+    IDWorkspace: "ws-2",
+    WorkSpaceName: "Design Studio",
+    WorkSpaceDescription: "Workspace dành cho team thiết kế UI/UX. Quản lý các dự án thiết kế, tài nguyên đồ họa và quy trình làm việc sáng tạo. Tập trung vào việc tạo ra các trải nghiệm người dùng tuyệt vời."
+  },
+  {
+    IDWorkspace: "ws-3",
+    WorkSpaceName: "Marketing Hub",
+    WorkSpaceDescription: "Không gian làm việc cho team marketing và truyền thông. Quản lý các chiến dịch, nội dung và phân tích hiệu suất. Đảm bảo thông điệp thương hiệu được truyền tải hiệu quả đến khách hàng."
+  }
+];
 
 export function useGetWorkspaces() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -24,17 +36,12 @@ export function useGetWorkspaces() {
   const fetchWorkspaces = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get<WorkspaceResponse>(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/workspace`
-      );
-
-      if (response.status === 200) {
-        setWorkspaces(response.data.data);
-      }
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setWorkspaces(MOCK_WORKSPACES);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Không thể lấy danh sách workspace. Vui lòng thử lại sau.";
+      const errorMessage = "Không thể lấy danh sách workspace. Vui lòng thử lại sau.";
       setError(errorMessage);
-      showToast.error("Lỗi", errorMessage);
     } finally {
       setIsLoading(false);
     }

@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "@/services/api";
-import { showToast } from "@/lib/toast-config";
 import Cookies from "js-cookie";
 
 interface Status {
@@ -12,11 +10,33 @@ interface Status {
   IsDeleted: number;
 }
 
-interface StatusResponse {
-  message: string;
-  IDProject: string;
-  data: Status[];
-}
+// Data cứng cho statuses (dùng chung cho tất cả projects)
+const MOCK_STATUSES: Status[] = [
+  {
+    IDStatus: "status-1",
+    Status: "To Do",
+    StatusOrder: 1,
+    IsDeleted: 0
+  },
+  {
+    IDStatus: "status-2",
+    Status: "In Progress",
+    StatusOrder: 2,
+    IsDeleted: 0
+  },
+  {
+    IDStatus: "status-3",
+    Status: "Review",
+    StatusOrder: 3,
+    IsDeleted: 0
+  },
+  {
+    IDStatus: "status-4",
+    Status: "Done",
+    StatusOrder: 4,
+    IsDeleted: 0
+  }
+];
 
 export function useGetStatuses() {
   const [statuses, setStatuses] = useState<Status[]>([]);
@@ -32,19 +52,15 @@ export function useGetStatuses() {
         throw new Error('Không tìm thấy Project ID');
       }
 
-      const response = await axios.get<StatusResponse>(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/status/${projectId}`
-      );
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      if (response.status === 200) {
-        // Sort statuses by StatusOrder before setting state
-        const sortedStatuses = response.data.data.sort((a, b) => a.StatusOrder - b.StatusOrder);
-        setStatuses(sortedStatuses);
-      }
+      // Sort statuses by StatusOrder before setting state
+      const sortedStatuses = [...MOCK_STATUSES].sort((a, b) => a.StatusOrder - b.StatusOrder);
+      setStatuses(sortedStatuses);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || error.message || "Không thể lấy danh sách status. Vui lòng thử lại sau.";
+      const errorMessage = error.message || "Không thể lấy danh sách status. Vui lòng thử lại sau.";
       setError(errorMessage);
-      showToast.error("Lỗi", errorMessage);
     } finally {
       setIsLoading(false);
     }
